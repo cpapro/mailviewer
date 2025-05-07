@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zoomexa Student Earning Proof</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -12,7 +12,7 @@
   <nav class="bg-white shadow-md">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
       <h1 class="text-2xl font-bold text-blue-600">Zoomexa</h1>
-      <ul class="flex flex-wrap gap-4 text-sm sm:text-base">
+      <ul class="flex gap-6">
         <li><a href="https://zoomexa.github.io/earningproof" class="hover:text-blue-500 font-medium">Home</a></li>
         <li><a href="#earning" class="hover:text-blue-500 font-medium">Earning</a></li>
         <li><a href="#upload" class="hover:text-blue-500 font-medium">Upload</a></li>
@@ -22,102 +22,126 @@
   </nav>
 
   <!-- Hero Section -->
-  <section class="text-center py-10 bg-white shadow-sm">
-    <h2 class="text-3xl sm:text-4xl font-bold mb-2">Zoomexa Student Earning Proof</h2>
-    <p class="text-base sm:text-lg text-gray-600">বাস্তব শিক্ষার্থীদের উপার্জনের প্রমাণ দেখুন</p>
+  <section class="text-center py-12 bg-white shadow-sm">
+    <h2 class="text-4xl font-bold mb-2">Zoomexa Student Earning Proof</h2>
+    <p class="text-lg text-gray-600">বাস্তব শিক্ষার্থীদের উপার্জনের প্রমাণ দেখুন</p>
   </section>
 
   <!-- Earning Proof Section -->
-  <section id="earning" class="py-8 bg-gray-50">
+  <section id="earning" class="py-12 bg-gray-50">
     <div class="container mx-auto px-4">
-      <h3 class="text-xl sm:text-2xl font-semibold mb-6 text-center text-blue-700">শিক্ষার্থীদের উপার্জনের প্রমাণ</h3>
+      <h3 class="text-2xl font-semibold mb-8 text-center text-blue-700">শিক্ষার্থীদের উপার্জনের প্রমাণ</h3>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <!-- Each Card -->
-        <!-- Repeat for each earning card -->
+      <div class="grid md:grid-cols-3 sm:grid-cols-2 gap-6">
         <!-- Card 1 -->
         <div class="bg-white p-4 shadow rounded-lg">
           <h4 class="text-lg font-bold">Diltaj Islam</h4>
-          <img src="ss1.jpg" alt="Earning Proof" class="mt-2 rounded border w-full h-48 object-cover">
-          <p class="text-sm mt-2 text-gray-700">Ami Zoomexa er team member silam ar ekhn fiverr e successful.</p>
+          <img onclick="openModal('ss1.jpg')" src="ss1.jpg" alt="Earning Proof" class="mt-2 rounded border">
+          <p class="text-sm mt-2 text-gray-700">Ami Zoomexa er team member silam ar ekhn fiverr e successful. </p>
         </div>
 
         <!-- Card 2 -->
         <div class="bg-white p-4 shadow rounded-lg">
           <h4 class="text-lg font-bold">সাবিনা আক্তার</h4>
-          <img src="ss4.jpg" alt="Earning Proof" class="mt-2 rounded border w-full h-48 object-cover">
+          <img onclick="openModal('ss4.jpg')" src="ss4.jpg" alt="Earning Proof" class="mt-2 rounded border">
           <p class="text-sm mt-2 text-gray-700">Zoomexa-র সহায়তায় আমি ফাইবার থেকে প্রথম অর্ডারে ১২ ডলার পেয়েছি।</p>
         </div>
 
         <!-- Card 3 -->
         <div class="bg-white p-4 shadow rounded-lg">
           <h4 class="text-lg font-bold">তানভীর হাসান</h4>
-          <img src="ss5.png" alt="Earning Proof" class="mt-2 rounded border w-full h-48 object-cover">
+          <img onclick="openModal('ss5.png')" src="ss5.png" alt="Earning Proof" class="mt-2 rounded border">
           <p class="text-sm mt-2 text-gray-700">আলহামদুলিল্লাহ ১ম দিনের ইনকাম। আমি যে ১ম দিন থেকে ইনকাম করতে পারবো সেটা বুঝতে পারিনি।</p>
         </div>
 
         <!-- Card 4 -->
         <div class="bg-white p-4 shadow rounded-lg">
           <h4 class="text-lg font-bold">Hamza Sarwar</h4>
-          <img src="ss3.jpg" alt="Earning Proof" class="mt-2 rounded border w-full h-48 object-cover">
+          <img onclick="openModal('ss3.jpg')" src="ss3.jpg" alt="Earning Proof" class="mt-2 rounded border">
           <p class="text-sm mt-2 text-gray-700">Zoomexa থেকে শেখা স্কিল দিয়ে মাসে নিয়মিত আয় করছি।</p>
         </div>
 
         <!-- Card 5 -->
         <div class="bg-white p-4 shadow rounded-lg">
           <h4 class="text-lg font-bold">Emon Mahadi</h4>
-          <img src="ss2.jpg" alt="Earning Proof" class="mt-2 rounded border w-full h-48 object-cover">
+          <img onclick="openModal('ss2.jpg')" src="ss2.jpg" alt="Earning Proof" class="mt-2 rounded border">
           <p class="text-sm mt-2 text-gray-700">আমি কোর্স শেষে মাত্র ১৫ দিনের মধ্যেই ৭৯ ডলার আয় করেছি</p>
         </div>
 
         <!-- Card 6 -->
         <div class="bg-white p-4 shadow rounded-lg">
           <h4 class="text-lg font-bold">ইয়াহিয়া আমিন</h4>
-          <img src="ss6.jpg" alt="Earning Proof" class="mt-2 rounded border w-full h-48 object-cover">
+          <img onclick="openModal('ss6.jpg')" src="ss6.jpg" alt="Earning Proof" class="mt-2 rounded border">
           <p class="text-sm mt-2 text-gray-700">Zoomexa এর প্রথম ক্লাস করে ইনকাম করলাম। ধন্যবাদ মেন্টর নাজমুস সাকিব স্যার কে।</p>
         </div>
 
         <!-- Card 7 -->
         <div class="bg-white p-4 shadow rounded-lg">
           <h4 class="text-lg font-bold">নাজমুল হোসেন</h4>
-          <img src="ss7.png" alt="Earning Proof" class="mt-2 rounded border w-full h-48 object-cover">
-          <p class="text-sm mt-2 text-gray-700">CPA Pro theke 2nd din earn korsi 29$. Thanks to Zoomexa.</p>
+          <img onclick="openModal('ss7.png')" src="ss7.png" alt="Earning Proof" class="mt-2 rounded border">
+          <p class="text-sm mt-2 text-gray-700">CPA Pro theke 2nd din earn korsi 29$. Thanks to Zoomexa. </p>
         </div>
 
         <!-- Card 8 -->
         <div class="bg-white p-4 shadow rounded-lg">
-          <h4 class="text-lg font-bold">Md Roni</h4>
-          <img src="ss8.jpg" alt="Earning Proof" class="mt-2 rounded border w-full h-48 object-cover">
+          <h4 class="text-lg font-bold">Md Roni </h4>
+          <img onclick="openModal('ss8.jpg')" src="ss8.jpg" alt="Earning Proof" class="mt-2 rounded border">
           <p class="text-sm mt-2 text-gray-700">Thanks to zoomexa. Ei client er sathe 2 bar kaj korlam. 12 dollar tips dise.</p>
         </div>
 
         <!-- Card 9 -->
         <div class="bg-white p-4 shadow rounded-lg">
           <h4 class="text-lg font-bold">Mahibul Islam</h4>
-          <img src="ss9.jpg" alt="Earning Proof" class="mt-2 rounded border w-full h-48 object-cover">
-          <p class="text-sm mt-2 text-gray-700">Alhamdulillah. 90$ earn korsi ei mashe.</p>
+          <img onclick="openModal('ss9.jpg')" src="ss9.jpg" alt="Earning Proof" class="mt-2 rounded border">
+          <p class="text-sm mt-2 text-gray-700"> Alhamdulillah. 90$ earn korsi ei mashe. </p>
         </div>
 
         <!-- Card 10 -->
         <div class="bg-white p-4 shadow rounded-lg">
-          <h4 class="text-lg font-bold">Rafi Chowdhury</h4>
-          <img src="ss11.jpg" alt="Earning Proof" class="mt-2 rounded border w-full h-48 object-cover">
+          <h4 class="text-lg font-bold">Rafi Chowdhury </h4>
+          <img onclick="openModal('ss11.jpg')" src="ss11.jpg" alt="Earning Proof" class="mt-2 rounded border">
           <p class="text-sm mt-2 text-gray-700">আমি CPA Marketing এর মাধ্যমে প্রথম মাসেই 130 ডলার ইনকাম করেছি।</p>
         </div>
 
         <!-- Card 11 -->
         <div class="bg-white p-4 shadow rounded-lg">
           <h4 class="text-lg font-bold">সাদিয়া রহমান</h4>
-          <img src="ss10.jpg" alt="Earning Proof" class="mt-2 rounded border w-full h-48 object-cover">
-          <p class="text-sm mt-2 text-gray-700">প্রথম মাসে ইনকাম করলাম এখনও কোর্স চলছে আশা করছি কোর্স শেষ করে আরো ভালো ফলাফল লাভ করব।</p>
+          <img onclick="openModal('ss10.jpg')" src="ss10.jpg" alt="Earning Proof" class="mt-2 rounded border">
+          <p class="text-sm mt-2 text-gray-700"> প্রথম মাসে ইনকাম করলাম এখনও কোর্স চলছে আশা করছি কোর্স শেষ করে আরো ভালো ফলাফল লাভ করব। </p>
         </div>
+      </div>
 
-        
+      <!-- View More Button -->
+      <div class="text-center mt-8">
+        <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-300">
+          View More
+        </button>
+      </div>
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="bg-white py-6 mt-12 text-center text-sm text-gray-500 shadow-inner">
     © 2025 Zoomexa. সর্বস্বত্ব সংরক্ষিত।
   </footer>
+
+  <!-- Image Modal -->
+  <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+    <span onclick="closeModal()" class="absolute top-4 right-6 text-white text-4xl cursor-pointer">&times;</span>
+    <img id="modalImg" src="" class="max-h-[90vh] max-w-[90vw] object-contain rounded shadow-lg" />
+  </div>
+
+  <script>
+    function openModal(src) {
+      document.getElementById('modalImg').src = src;
+      document.getElementById('imageModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('imageModal').classList.add('hidden');
+      document.getElementById('modalImg').src = '';
+    }
+  </script>
 
 </body>
 </html>
