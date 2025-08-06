@@ -1,292 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard - CPA Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mail Status Checker</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+    }
 
-  <!-- Tailwind CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
+    }
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    h1 {
+      text-align: center;
+      color: #00ffc3;
+      margin-bottom: 30px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      background-color: #2a2a2a;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 8px;
+      resize: none;
+    }
+
+    .btn {
+      background: linear-gradient(to right, #ff005e, #9a00ff);
+      border: none;
+      padding: 12px 20px;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: 0.3s ease;
+    }
+
+    .btn:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: linear-gradient(to right, #ff5f9c, #c66bff);
+    }
+
+    .remove-btn {
+      float: right;
+      margin-top: -38px;
+      background-color: transparent;
+      border: none;
+      color: #ff5f9c;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .status-output {
+      margin-top: 25px;
+      position: relative;
+    }
+
+    .status-box {
+      background-color: #2a2a2a;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 14px;
+      font-size: 15px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      height: 150px;
+      overflow-y: auto;
+    }
+
+    .status-box:focus {
+      outline: none;
+    }
+
+    .status-summary {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    .summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #1f1f1f;
+      border-radius: 8px;
+      padding: 10px 20px;
+      margin: 5px;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .used i { color: #ff5252; }
+    .fresh i { color: #4caf50; }
+    .unregistered i { color: #ffa726; }
+    .invalid i { color: #888; }
+
+    @media screen and (max-width: 600px) {
+      .summary {
+        flex: 1 1 100%;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
+<body>
 
-<body class="bg-gray-50 font-sans flex min-h-screen relative">
+  <div class="container">
+    <h1>Mail Status Checker</h1>
 
-  <!-- Mobile Top Bar -->
-  <div class="md:hidden flex items-center justify-between bg-white p-4 shadow-md w-full fixed z-50">
-    <button id="menuButton" class="text-2xl text-gray-600 focus:outline-none">
-      <i class="fas fa-bars"></i>
-    </button>
-    <h1 class="text-xl font-bold text-gray-700">CPA Pro</h1>
-    <div class="relative">
-      <button id="mobileProfileButton" class="text-2xl text-gray-600 focus:outline-none">
-        <i class="fas fa-user-circle"></i>
-      </button>
-      <div id="mobileProfileDropdown" class="absolute right-0 mt-2 w-64 bg-white border rounded-lg shadow-lg py-2 hidden z-50">
-        <div class="px-4 py-2 border-b">
-          <p class="text-sm text-gray-600"><strong>User ID:</strong> 3271</p>
-          <p class="text-sm text-gray-600"><strong>Ref ID:</strong> Zoomexa128</p>
-        </div>
-        <div class="px-4 py-3 space-y-2 border-b">
-          <label class="flex items-center space-x-2">
-            <input type="radio" name="mobilePlan" checked disabled class="text-blue-500" />
-            <span class="text-sm text-gray-700 font-medium">Basic Plan (Selected)</span>
-          </label>
-          <label class="flex items-center space-x-2 opacity-50 cursor-not-allowed">
-            <input type="radio" name="mobilePlan" disabled />
-            <span class="text-sm text-gray-700 font-medium">Professional Plan (Locked)</span>
-          </label>
-        </div>
-        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
-        <a href="https://cpapro.github.io/cpapro/home.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a>
-      </div>
+    <label>Enter Emails:</label>
+    <button class="remove-btn" onclick="clearInput()">Remove</button>
+    <textarea id="inputEmails" placeholder="Paste emails here..." oninput="toggleButton()"></textarea>
+
+    <button class="btn" id="checkBtn" onclick="checkEmails()" disabled>Find Out</button>
+
+    <div class="status-output">
+      <label>Status Output:</label>
+      <button class="remove-btn" onclick="clearOutput()">Remove</button>
+      <div class="status-box" id="outputBox" contenteditable="false"></div>
+    </div>
+
+    <div class="status-summary">
+      <div class="summary used"><i class="fas fa-ban"></i> Used: <span id="usedCount">0</span></div>
+      <div class="summary fresh"><i class="fas fa-check-circle"></i> Fresh: <span id="freshCount">0</span></div>
+      <div class="summary unregistered"><i class="fas fa-question-circle"></i> Unregistered: <span id="unregCount">0</span></div>
+      <div class="summary invalid"><i class="fas fa-exclamation-triangle"></i> Invalid: <span id="invalidCount">0</span></div>
     </div>
   </div>
 
-  <!-- Sidebar -->
-  <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-700 to-blue-800 text-white flex-col transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 md:flex z-40">
-    <div class="flex items-center justify-center h-20 border-b border-blue-600">
-      <h1 class="text-2xl font-bold tracking-wide">CPA Pro</h1>
-    </div>
-
-    <nav class="flex-1 px-6 py-8 space-y-4 overflow-y-auto">
-      <a href="dashboard.html" class="flex items-center space-x-3 hover:bg-blue-600 px-4 py-3 rounded-lg transition">
-        <i class="fas fa-tachometer-alt"></i>
-        <span>Dashboard</span>
-      </a>
-      <a href="https://cpapro.github.io/cpapro/offer.html" class="flex items-center space-x-3 hover:bg-blue-600 px-4 py-3 rounded-lg transition">
-        <i class="fas fa-tags"></i>
-        <span>Offers</span>
-      </a>
-      <a href="https://cpapro.github.io/cpapro/withdraw.html" class="flex items-center space-x-3 hover:bg-blue-600 px-4 py-3 rounded-lg transition">
-        <i class="fas fa-wallet"></i>
-        <span>Withdraw</span>
-      </a>
-      <a href="https://cpapro.github.io/cpapro/setting.html" class="flex items-center space-x-3 hover:bg-blue-600 px-4 py-3 rounded-lg transition">
-        <i class="fas fa-cog"></i>
-        <span>Settings</span>
-      </a>
-    </nav>
-
-    <div class="px-6 py-4">
-      <a href="https://cpapro.github.io/cpapro/home.html" class="flex items-center justify-center bg-red-500 hover:bg-red-600 w-full py-3 rounded-lg font-semibold transition">
-        <i class="fas fa-sign-out-alt mr-2"></i> Sign Out
-      </a>
-    </div>
-  </aside>
-
-  <!-- Main Content Area -->
-  <div class="flex-1 flex flex-col pt-16 md:pt-0 md:ml-64">
-
-    <!-- Top Bar -->
-    <div class="hidden md:flex justify-end items-center bg-white p-4 shadow-md relative">
-      <div class="relative">
-        <button id="profileButton" class="flex items-center space-x-2 focus:outline-none">
-          <i class="fas fa-user-circle text-3xl text-gray-600"></i>
-          <span class="hidden md:block font-medium text-gray-700">Profile</span>
-          <i class="fas fa-chevron-down text-gray-500"></i>
-        </button>
-
-        <!-- Dropdown Menu -->
-        <div id="profileDropdown" class="absolute right-0 mt-2 w-64 bg-white border rounded-lg shadow-lg py-2 hidden z-50">
-
-          <!-- User Info -->
-          <div class="px-4 py-2 border-b">
-            <p class="text-sm text-gray-600"><strong>User ID:</strong> 3271</p>
-            <p class="text-sm text-gray-600"><strong>Ref ID:</strong> zpro111</p>
-          </div>
-
-         <!-- Plan Selection -->
-          <div class="px-4 py-3 space-y-2 border-b">
-            <label class="flex items-center space-x-2">
-              <input type="radio" name="plan" checked disabled class="text-blue-500" />
-              <span class="text-sm text-gray-700 font-medium">Professional Plan (Selected)</span>
-            </label>
-            <label class="flex items-center space-x-2 opacity-50 cursor-not-allowed">
-              <input type="radio" name="plan" disabled />
-              <span class="text-sm text-gray-700 font-medium">Basic Plan (Locked)</span>
-            </label>
-          </div>
-
-          <!-- Profile Actions -->
-          <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
-          <a href="https://cpapro.github.io/cpapro/home.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Main Content -->
-    <main class="p-6 md:p-10">
-      <h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard Overview</h2>
-
-      <!-- Stats Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg transition">
-          <div class="flex items-center justify-center mb-4">
-            <i class="fas fa-eye text-blue-500 text-3xl"></i>
-          </div>
-          <p class="text-gray-500 text-sm uppercase">Impressions</p>
-          <h3 class="text-2xl font-bold text-gray-800 mt-1">0</h3>
-        </div>
-
-        <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg transition">
-          <div class="flex items-center justify-center mb-4">
-            <i class="fas fa-mouse-pointer text-green-500 text-3xl"></i>
-          </div>
-          <p class="text-gray-500 text-sm uppercase">Clicks</p>
-          <h3 class="text-2xl font-bold text-gray-800 mt-1">0</h3>
-        </div>
-
-        <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg transition">
-          <div class="flex items-center justify-center mb-4">
-            <i class="fas fa-dollar-sign text-yellow-500 text-3xl"></i>
-          </div>
-          <p class="text-gray-500 text-sm uppercase">Earnings</p>
-          <h3 class="text-2xl font-bold text-gray-800 mt-1">$0</h3>
-        </div>
-
-        <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg transition">
-          <div class="flex items-center justify-center mb-4">
-            <i class="fas fa-coins text-purple-500 text-3xl"></i>
-          </div>
-          <p class="text-gray-500 text-sm uppercase">Total Earnings</p>
-          <h3 class="text-2xl font-bold text-gray-800 mt-1">$0</h3>
-        </div>
-      </div>
-
-      <!-- Top Offers Section -->
-      <section class="mt-10">
-        <h3 class="text-2xl font-semibold mb-4 text-gray-800">Top Offers</h3>
-        <div class="bg-white shadow-md rounded-xl overflow-x-auto">
-          <table class="w-full text-left">
-            <thead class="bg-blue-100 text-gray-700 uppercase text-sm">
-              <tr>
-                <th class="py-4 px-6">Offer Name</th>
-                <th class="py-4 px-6">Payout</th>
-                <th class="py-4 px-6">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="hover:bg-gray-50 transition">
-                <td class="py-4 px-6 font-medium">Click and Earn</td>
-                <td class="py-4 px-6 text-blue-600">$0.87 / Click</td>
-                <td class="py-4 px-6">
-                  <span class="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full">Active</span>
-                </td>
-              </tr>
-              <tr class="hover:bg-gray-50 transition">
-                <td class="py-4 px-6 font-medium">Mobile App Install</td>
-                <td class="py-4 px-6 text-blue-600">$1.20 / Action</td>
-                <td class="py-4 px-6">
-                  <span class="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full">Active</span>
-                </td>
-              </tr>
-              <tr class="hover:bg-gray-50 transition">
-                <td class="py-4 px-6 font-medium">Survey Complete</td>
-                <td class="py-4 px-6 text-blue-600">$1.75 / Lead</td>
-                <td class="py-4 px-6">
-                  <span class="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full">Active</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Active Campaigns Section -->
-      <section class="mt-10">
-        <h3 class="text-2xl font-semibold mb-4 text-gray-800">Active Campaigns</h3>
-        <div class="bg-white shadow-md rounded-xl overflow-x-auto">
-          <table class="w-full text-left">
-            <thead class="bg-blue-100 text-gray-700 uppercase text-sm">
-              <tr>
-                <th class="py-4 px-6">Campaign</th>
-                <th class="py-4 px-6">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="hover:bg-gray-50 transition">
-                <td class="py-4 px-6 font-medium">Mobile App Install</td>
-                <td class="py-4 px-6">
-                  <span class="bg-red-100 text-red-600 text-xs px-3 py-1 rounded-full">Inactive</span>
-                </td>
-              </tr>
-              <tr class="hover:bg-gray-50 transition">
-                <td class="py-4 px-6 font-medium">Click and Earn</td>
-                <td class="py-4 px-6">
-                  <span class="bg-red-100 text-red-600 text-xs px-3 py-1 rounded-full">Inactive</span>
-                </td>
-              </tr>
-              <tr class="hover:bg-gray-50 transition">
-                <td class="py-4 px-6 font-medium">Survey Complete</td>
-                <td class="py-4 px-6">
-                  <span class="bg-red-100 text-red-600 text-xs px-3 py-1 rounded-full">Inactive</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Notifications Section -->
-      <section class="mt-10">
-        <h3 class="text-2xl font-semibold mb-4 text-gray-800">Notifications</h3>
-        <div class="bg-white shadow-md rounded-xl p-6 space-y-4">
-          <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition">
-            <div class="flex items-center space-x-3">
-              <span class="text-2xl">🎉</span>
-              <span class="font-medium text-gray-700">New Offer "Click and Earn" Added!</span>
-            </div>
-            <span class="text-xs text-gray-500">2 hours ago</span>
-          </div>
-          <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition">
-            <div class="flex items-center space-x-3">
-              <span class="text-2xl">💰</span>
-              <span class="font-medium text-gray-700">Payment of $25 Sent to PayPal</span>
-            </div>
-            <span class="text-xs text-gray-500">1 day ago</span>
-          </div>
-          <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition">
-            <div class="flex items-center space-x-3">
-              <span class="text-2xl">⚙️</span>
-              <span class="font-medium text-gray-700">Profile Settings Updated</span>
-            </div>
-            <span class="text-xs text-gray-500">3 days ago</span>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-  </div>
-
-  <!-- Scripts -->
   <script>
-    // Mobile profile dropdown
-    const mobileProfileButton = document.getElementById('mobileProfileButton');
-    const mobileProfileDropdown = document.getElementById('mobileProfileDropdown');
-    mobileProfileButton.addEventListener('click', () => {
-      mobileProfileDropdown.classList.toggle('hidden');
-    });
+    const emailStatus = {
+      "user1@example.com": "Used",
+      "user2@example.com": "Fresh",
+      "user3@example.com": "Unregistered",
+      "abc@mail.com": "Used",
+      "hello@gmail.com": "Fresh",
+      "unknown@fake.com": "Unregistered"
+    };
 
-    // Profile dropdown
-    const profileButton = document.getElementById('profileButton');
-    const profileDropdown = document.getElementById('profileDropdown');
-    profileButton.addEventListener('click', () => {
-      profileDropdown.classList.toggle('hidden');
-    });
+    function isValidEmail(email) {
+      // Simple email regex validation
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
 
-    // Sidebar toggle
-    const menuButton = document.getElementById('menuButton');
-    const sidebar = document.getElementById('sidebar');
-    menuButton.addEventListener('click', () => {
-      sidebar.classList.toggle('-translate-x-full');
-    });
+    function checkEmails() {
+      const inputRaw = document.getElementById("inputEmails").value.trim();
+      if (!inputRaw) return;
+
+      // Split by newlines, commas, semicolons, spaces, tabs
+      const input = inputRaw.split(/[\n,; \t]+/).filter(e => e.trim() !== '');
+
+      const outputBox = document.getElementById("outputBox");
+      let used = 0, fresh = 0, unreg = 0, invalid = 0;
+      let result = '';
+
+      input.forEach(email => {
+        const trimmed = email.trim();
+        if (!isValidEmail(trimmed)) {
+          result += `${trimmed} — Invalid Email Format\n`;
+          invalid++;
+          return;
+        }
+        const status = emailStatus[trimmed.toLowerCase()];
+        if (status === "Used") {
+          result += `${trimmed} — Used\n`;
+          used++;
+        } else if (status === "Fresh") {
+          result += `${trimmed} — Fresh\n`;
+          fresh++;
+        } else {
+          // Treat all unknown emails as Unregistered
+          result += `${trimmed} — Unregistered\n`;
+          unreg++;
+        }
+      });
+
+      outputBox.innerText = result || 'No valid matches found.';
+      document.getElementById("usedCount").textContent = used;
+      document.getElementById("freshCount").textContent = fresh;
+      document.getElementById("unregCount").textContent = unreg;
+      document.getElementById("invalidCount").textContent = invalid;
+    }
+
+    function clearInput() {
+      document.getElementById("inputEmails").value = '';
+      toggleButton();
+    }
+
+    function clearOutput() {
+      document.getElementById("outputBox").innerText = '';
+      resetCounts();
+    }
+
+    function resetCounts() {
+      document.getElementById("usedCount").textContent = 0;
+      document.getElementById("freshCount").textContent = 0;
+      document.getElementById("unregCount").textContent = 0;
+      document.getElementById("invalidCount").textContent = 0;
+    }
+
+    function toggleButton() {
+      const input = document.getElementById("inputEmails").value.trim();
+      document.getElementById("checkBtn").disabled = (input.length === 0);
+    }
   </script>
 
 </body>
-
 </html>
