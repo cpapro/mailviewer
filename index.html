@@ -28,6 +28,12 @@
       margin-bottom: 30px;
     }
 
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
     textarea {
       width: 100%;
       height: 150px;
@@ -38,6 +44,12 @@
       font-size: 16px;
       border-radius: 8px;
       resize: none;
+      box-sizing: border-box;
+    }
+
+    /* Make inputEmails height same as outputBox */
+    #inputEmails {
+      height: 150px; /* Same height as outputBox */
     }
 
     .btn {
@@ -75,6 +87,7 @@
     .status-output {
       margin-top: 25px;
       position: relative;
+      clear: both;
     }
 
     .status-box {
@@ -91,6 +104,11 @@
 
     .status-box:focus {
       outline: none;
+    }
+
+    .download-btn {
+      display: none;
+      margin-top: 15px;
     }
 
     .status-summary {
@@ -129,21 +147,18 @@
 
   <div class="container">
     <h1>Mail Viewer</h1>
-<br>
-<br>
 
     <label>Enter Emails:</label>
     <button class="remove-btn" onclick="clearInput()">Remove</button>
     <textarea id="inputEmails" placeholder="Paste emails here..." oninput="toggleButton()"></textarea>
 
     <button class="btn" id="checkBtn" onclick="checkEmails()" disabled>Find Out</button>
-<br>
-<br>
 
     <div class="status-output">
       <label>Status Output:</label>
       <button class="remove-btn" onclick="clearOutput()">Remove</button>
       <div class="status-box" id="outputBox" contenteditable="false"></div>
+      <button class="btn download-btn" id="downloadBtn" onclick="downloadResults()">Download .txt</button>
     </div>
 
     <div class="status-summary">
@@ -156,16 +171,203 @@
 
   <script>
     const emailStatus = {
+      // Sample Used emails
       "teeback964@gmail.com": "Used",
-      "tahmednil@gmail.com": "Fresh",
-      "user3@example.com": "Unregistered",
       "abc@mail.com": "Used",
-      "hello@gmail.com": "Fresh",
-      "unknown@fake.com": "Unregistered"
+
+      // The full 192 Fresh emails list below:
+      "laohopoabik@gmail.com": "Fresh",
+      "garagobuavuk@gmail.com": "Fresh",
+      "frakopoabuk@gmail.com": "Fresh",
+      "fragolbuako@gmail.com": "Fresh",
+      "buakofaniba@gmail.com": "Fresh",
+      "luahofanika@gmail.com": "Fresh",
+      "buakonuaho@gmail.com": "Fresh",
+      "kuhaogarauk@gmail.com": "Fresh",
+      "buakodarauko@gmail.com": "Fresh",
+      "fanidadaruko@gmail.com": "Fresh",
+      "janivaoorayh@gmail.com": "Fresh",
+      "kuahojanibao@gmail.com": "Fresh",
+      "franiobukolo@gmail.com": "Fresh",
+      "luhkomubko@gmail.com": "Fresh",
+      "ahskxhshzkhx@gmail.com": "Fresh",
+      "ashskhx@gmail.com": "Fresh",
+      "sukkfdilkf@gmail.com": "Fresh",
+      "ahskjzsuskjz@gmail.com": "Fresh",
+      "zhjssjskkjf@gmail.com": "Fresh",
+      "shskhdahsks@gmail.com": "Fresh",
+      "sshsyshskshs@gmail.com": "Fresh",
+      "ahskxjdjsljx@gmail.com": "Fresh",
+      "ahakzhshkshz@gmail.com": "Fresh",
+      "shskhdahaksh@gmail.com": "Fresh",
+      "zhzkhxshkzhx@gmail.com": "Fresh",
+      "ahakhxs@gmail.com": "Fresh",
+      "ahakjsshkshd@gmail.com": "Fresh",
+      "ahskjzzhskhx@gmail.com": "Fresh",
+      "zhzkhzdhzkhx@gmail.com": "Fresh",
+      "ahskxjszhzkjx@gmail.com": "Fresh",
+      "ahskxjzzhzkhx@gmail.com": "Fresh",
+      "shzkjxahakzj@gmail.com": "Fresh",
+      "ayjjfdshjhf@gmail.com": "Fresh",
+      "dseejkjfshsksj@gmail.com": "Fresh",
+      "ahakhxshskhx343@gmail.com": "Fresh",
+      "shskhxajaksh@gmail.com": "Fresh",
+      "zhakhzahakzh@gmail.com": "Fresh",
+      "ahaksjzzhkjz@gmail.com": "Fresh",
+      "ahaksjzshajs@gmail.com": "Fresh",
+      "ahakdjssuskjx@gmail.com": "Fresh",
+      "shskhdahakdj@gmail.com": "Fresh",
+      "ahaksjzshakhz@gmail.com": "Fresh",
+      "ahskzhshzkhx@gmail.com": "Fresh",
+      "shskhxahakzh@gmail.com": "Fresh",
+      "ahakshshskhs860@gmail.com": "Fresh",
+      "ahaksjzshskjs@gmail.com": "Fresh",
+      "zjzkzjajkhx@gmail.com": "Fresh",
+      "zhzkhzahakshz@gmail.com": "Fresh",
+      "zhzkhxahakxhz@gmail.com": "Fresh",
+      "ahakxjzshzkhx@gmail.com": "Fresh",
+      "ahakzjzhzkjxsha@gmail.com": "Fresh",
+      "ajakzjzsjzkhx@gmail.com": "Fresh",
+      "shzkjzahakhz@gmail.com": "Fresh",
+      "shskjzahaksj@gmail.com": "Fresh",
+      "ahaksjdshskjx@gmail.com": "Fresh",
+      "suskhsahaks@gmail.com": "Fresh",
+      "ayjkgshkvf@gmail.com": "Fresh",
+      "ajakshshakjs@gmail.com": "Fresh",
+      "ahaksjshzkhs@gmail.com": "Fresh",
+      "shskjsajaksj@gmail.com": "Fresh",
+      "shzkjzajskxj@gmail.com": "Fresh",
+      "ajslxjshslnx@gmail.com": "Fresh",
+      "ahsxnzsjzkjx@gmail.com": "Fresh",
+      "sukzjsiksj@gmail.com": "Fresh",
+      "ajslxjzhakjd@gmail.com": "Fresh",
+      "shskjdahakxj@gmail.com": "Fresh",
+      "shskjsahaksjs@gmail.com": "Fresh",
+      "haskhsahakzh@gmail.com": "Fresh",
+      "shzkhzahaksj@gmail.com": "Fresh",
+      "shskjdahkdj@gmail.com": "Fresh",
+      "shksjsahskxj@gmail.com": "Fresh",
+      "ahakxjshskjd@gmail.com": "Fresh",
+      "usiahsahsksj@gmail.com": "Fresh",
+      "sjkjzzhojx@gmail.com": "Fresh",
+      "naiusmorkans@gmail.com": "Fresh",
+      "nnkdj547@gmail.com": "Fresh",
+      "jndj4105@gmail.com": "Fresh",
+      "snnn1545@gmail.com": "Fresh",
+      "ksjnn986@gmail.com": "Fresh",
+      "nnbb59784@gmail.com": "Fresh",
+      "snwb8789@gmail.com": "Fresh",
+      "dbsn270@gmail.com": "Fresh",
+      "nnjsj2737@gmail.com": "Fresh",
+      "nnnsn663@gmail.com": "Fresh",
+      "nenenjsn215@gmail.com": "Fresh",
+      "jdbnenen@gmail.com": "Fresh",
+      "knsns8178@gmail.com": "Fresh",
+      "mnjn6992@gmail.com": "Fresh",
+      "sulshzfuspjs@gmail.com": "Fresh",
+      "dusohdauoahd@gmail.com": "Fresh",
+      "ydsohdfudohd@gmail.com": "Fresh",
+      "suijfdhkhdeuo@gmail.com": "Fresh",
+      "ahskdhhdksbx@gmail.com": "Fresh",
+      "hxlxhcsuslhx@gmail.com": "Fresh",
+      "shalhxyssohd@gmail.com": "Fresh",
+      "sulshxchkzhx@gmail.com": "Fresh",
+      "shskhxchskhd@gmail.com": "Fresh",
+      "dhskhshskbd@gmail.com": "Fresh",
+      "suoshsaualjx@gmail.com": "Fresh",
+      "suslhxsusph@gmail.com": "Fresh",
+      "sykshslahs@gmail.com": "Fresh",
+      "suakhzshshx@gmail.com": "Fresh",
+      "shahzahsh9@gmail.com": "Fresh",
+      "syskhxayaohd@gmail.com": "Fresh",
+      "aysohdysogx@gmail.com": "Fresh",
+      "ahjidfshslbx@gmail.com": "Fresh",
+      "duspjsuslhx@gmail.com": "Fresh",
+      "hlhxhzlzhz@gmail.com": "Fresh",
+      "auaohdhssohd@gmail.com": "Fresh",
+      "ayaohdshskh@gmail.com": "Fresh",
+      "shslhdgaksh@gmail.com": "Fresh",
+      "xhkzhxsuzlhx@gmail.com": "Fresh",
+      "susohauaohx@gmail.com": "Fresh",
+      "zuzlhxgohx@gmail.com": "Fresh",
+      "ayaohzsushs@gmail.com": "Fresh",
+      "dhskxhagajgx@gmail.com": "Fresh",
+      "shoahakahz@gmail.com": "Fresh",
+      "shskdhdysohs@gmail.com": "Fresh",
+      "ahslbxdhskhz@gmail.com": "Fresh",
+      "zhzbzagskg@gmail.com": "Fresh",
+      "susohaudohx@gmail.com": "Fresh",
+      "sysohydsohahskh@gmail.com": "Fresh",
+      "audohxsusoh@gmail.com": "Fresh",
+      "shzkhxsysohs@gmail.com": "Fresh",
+      "dysousysoh@gmail.com": "Fresh",
+      "sysohsusoh@gmail.com": "Fresh",
+      "aualhxshskh@gmail.com": "Fresh",
+      "ahdkhdudkh@gmail.com": "Fresh",
+      "agdkhdhskh@gmail.com": "Fresh",
+      "shskhahskhx@gmail.com": "Fresh",
+      "ahdkhshlhx@gmail.com": "Fresh",
+      "ahdkhhxxlnx@gmail.com": "Fresh",
+      "dhlshfudlh@gmail.com": "Fresh",
+      "auskhsyskhx@gmail.com": "Fresh",
+      "ahshsulshz@gmail.com": "Fresh",
+      "aysohxdusoh@gmail.com": "Fresh",
+      "ahslhdysou@gmail.com": "Fresh",
+      "ahkshsyaoh@gmail.com": "Fresh",
+      "aysohsysou@gmail.com": "Fresh",
+      "ahsohsysoh@gmail.com": "Fresh",
+      "aysohsysohs@gmail.com": "Fresh",
+      "atsigdysoh@gmail.com": "Fresh",
+      "flkdnsuakh@gmail.com": "Fresh",
+      "hdkdhhsish@gmail.com": "Fresh",
+      "shslhahslhx@gmail.com": "Fresh",
+      "sysohdahsldh@gmail.com": "Fresh",
+      "ahdoheuoshd@gmail.com": "Fresh",
+      "agskhdysoh@gmail.com": "Fresh",
+      "atskhduskh@gmail.com": "Fresh",
+      "ayalgsyskh@gmail.com": "Fresh",
+      "atsitatskg@gmail.com": "Fresh",
+      "ayskhsusoh@gmail.com": "Fresh",
+      "atskhstaky@gmail.com": "Fresh",
+      "agskhdhskh4@gmail.com": "Fresh",
+      "ayaohstsoh@gmail.com": "Fresh",
+      "agslhxdtsoh@gmail.com": "Fresh",
+      "agakgsyaigs@gmail.com": "Fresh",
+      "agskhdhsihs@gmail.com": "Fresh",
+      "ahsdogzgskh@gmail.com": "Fresh",
+      "dhdkhahakhx@gmail.com": "Fresh",
+      "aysohdstaohd@gmail.com": "Fresh",
+      "agskhxsysohx@gmail.com": "Fresh",
+      "agskhxdhsohs@gmail.com": "Fresh",
+      "ahdkdhsusohs@gmail.com": "Fresh",
+      "ahalhdsyaohs@gmail.com": "Fresh",
+      "ahakshshakhs@gmail.com": "Fresh",
+      "ahakhxsusojd@gmail.com": "Fresh",
+      "ahalhxofldh@gmail.com": "Fresh",
+      "ahaldhsuspjd@gmail.com": "Fresh",
+      "ausodhdhsoja@gmail.com": "Fresh",
+      "ahalhxshaoha@gmail.com": "Fresh",
+      "ahalhdfusoud@gmail.com": "Fresh",
+      "ahalbdfudojs@gmail.com": "Fresh",
+      "ahaldhddysohs@gmail.com": "Fresh",
+      "agskdhddusoj@gmail.com": "Fresh",
+      "agdkdshskhd@gmail.com": "Fresh",
+      "ahskdhshskhz@gmail.com": "Fresh",
+      "ahakxhshslhz@gmail.com": "Fresh",
+      "auskdhdsalbx@gmail.com": "Fresh",
+      "ahskdhshslhd670@gmail.com": "Fresh",
+      "ahskdhqhakdh@gmail.com": "Fresh",
+      "ahskdhdysohs@gmail.com": "Fresh",
+      "ahskdhdhsohd@gmail.com": "Fresh",
+      "ahalsbshslhs@gmail.com": "Fresh",
+      "shsljxahsldh@gmail.com": "Fresh",
+      "ahslhxsuslhs@gmail.com": "Fresh",
+      "shskhxsuakgz@gmail.com": "Fresh",
+
+      // Add more "Used", "Unregistered" emails here if you want, or leave as is.
     };
 
     function isValidEmail(email) {
-      // Simple email regex validation
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
@@ -173,21 +375,19 @@
       const inputRaw = document.getElementById("inputEmails").value.trim();
       if (!inputRaw) return;
 
-      // Split by newlines, commas, semicolons, spaces, tabs
       const input = inputRaw.split(/[\n,; \t]+/).filter(e => e.trim() !== '');
-
       const outputBox = document.getElementById("outputBox");
       let used = 0, fresh = 0, unreg = 0, invalid = 0;
       let result = '';
 
       input.forEach(email => {
-        const trimmed = email.trim();
+        const trimmed = email.trim().toLowerCase();
         if (!isValidEmail(trimmed)) {
           result += `${trimmed} — Invalid Email Format\n`;
           invalid++;
           return;
         }
-        const status = emailStatus[trimmed.toLowerCase()];
+        const status = emailStatus[trimmed];
         if (status === "Used") {
           result += `${trimmed} — Used\n`;
           used++;
@@ -195,7 +395,6 @@
           result += `${trimmed} — Fresh\n`;
           fresh++;
         } else {
-          // Treat all unknown emails as Unregistered
           result += `${trimmed} — Unregistered\n`;
           unreg++;
         }
@@ -206,6 +405,19 @@
       document.getElementById("freshCount").textContent = fresh;
       document.getElementById("unregCount").textContent = unreg;
       document.getElementById("invalidCount").textContent = invalid;
+
+      // Show download button if there is output
+      const downloadBtn = document.getElementById("downloadBtn");
+      downloadBtn.style.display = result ? 'inline-block' : 'none';
+    }
+
+    function downloadResults() {
+      const text = document.getElementById("outputBox").innerText;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'email_results.txt';
+      link.click();
     }
 
     function clearInput() {
@@ -215,6 +427,7 @@
 
     function clearOutput() {
       document.getElementById("outputBox").innerText = '';
+      document.getElementById("downloadBtn").style.display = 'none';
       resetCounts();
     }
 
